@@ -1,5 +1,11 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "@better-auth/drizzle-adapter";
+import {
+    user,
+    session,
+    account,
+    verification,
+} from "@/modules/users/infrastructure/persistence/auth-schema";
 
 import { env } from "@/shared/config/env";
 import { db } from "@/shared/infrastructure/database/client";
@@ -11,6 +17,12 @@ export const auth = betterAuth({
 
     database: drizzleAdapter(db, {
         provider: "pg",
+        schema: {
+            user,
+            session,
+            account,
+            verification,
+        },
     }),
 
     emailAndPassword: {
