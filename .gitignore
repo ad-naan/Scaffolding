@@ -1,0 +1,57 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs and framework caches
+.next/
+out/
+dist/
+build/
+coverage/
+.turbo/
+.vercel/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+
+# Operating system and editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# TypeScript
+*.tsbuildinfo
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Java and Spring Boot
+target/
+.gradle/
+
+# Go
+/vendor/
+
+# Electron packaging
+release/
+electron-dist/
+
+# Temporary files
+*.tmp
+*.bak
