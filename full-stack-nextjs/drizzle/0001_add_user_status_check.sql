@@ -1,0 +1,1 @@
+ALTER TABLE "user" ADD CONSTRAINT "user_status_check" CHECK ("user"."status" IN ('pending', 'active', 'suspended', 'deleted'));
