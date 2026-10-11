@@ -1,16 +1,27 @@
-import { ValidationError } from "@/shared/validation/validation-error";
 
+import { ValidationError } from "@/shared/validation/validation-error";
 import { ApiError } from "@/shared/http/api-error";
 import { apiFailure, apiSuccess } from "@/shared/http/api-response";
 
-/**
- * 普通业务 API 的处理函数。
- *
- * Context 用于兼容 Next.js 动态路由参数。
- */
 type ApiHandler<Context = unknown> = (
     request: Request,
     context: Context,
+) => unknown | Promise<unknown>;
+
+type ActiveSession = {
+    user: {
+        id: string;
+    };
+    session: {
+        id: string;
+        userId: string;
+    };
+};
+
+type AuthenticatedApiHandler<Context = unknown> = (
+    request: Request,
+    context: Context,
+    session: ActiveSession,
 ) => unknown | Promise<unknown>;
 
 /**
@@ -74,4 +85,26 @@ export function withApiHandler<Context = unknown>(
             );
         }
     };
+}
+
+/**
+ * 处理需要登录且账号处于 active 状态的业务 API。
+ *
+ * 认证失败时复用 withApiHandler 的统一异常处理。
+ * 业务处理函数可通过第三个参数访问当前会话。
+ */
+export function withAuthenticatedApiHandler<Context = unknown>(
+    handler: AuthenticatedApiHandler<Context>,
+) {
+    return withApiHandler<Context>(
+        async (request, context) => {
+            const { requireActiveSession } = await import(
+                "@/shared/infrastructure/auth/require-active-session"
+            );
+
+            const session = await requireActiveSession(request);
+
+            return handler(request, context, session);
+        },
+    );
 }
