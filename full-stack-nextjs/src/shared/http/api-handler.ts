@@ -2,21 +2,16 @@
 import { ValidationError } from "@/shared/validation/validation-error";
 import { ApiError } from "@/shared/http/api-error";
 import { apiFailure, apiSuccess } from "@/shared/http/api-response";
+import type { requireActiveSession } from "@/shared/infrastructure/auth/require-active-session";
 
 type ApiHandler<Context = unknown> = (
     request: Request,
     context: Context,
 ) => unknown | Promise<unknown>;
 
-type ActiveSession = {
-    user: {
-        id: string;
-    };
-    session: {
-        id: string;
-        userId: string;
-    };
-};
+type ActiveSession = NonNullable<
+    Awaited<ReturnType<typeof requireActiveSession>>
+>;
 
 type AuthenticatedApiHandler<Context = unknown> = (
     request: Request,
